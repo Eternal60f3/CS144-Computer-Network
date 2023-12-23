@@ -1,26 +1,10 @@
 ---
-Language: Cpp
+# We'll use defaults from the LLVM style, but with 4 columns indentation.
 BasedOnStyle: LLVM
-AllowAllParametersOfDeclarationOnNextLine: false
-AlwaysBreakTemplateDeclarations: true
-BinPackArguments: false
-BinPackParameters: false
-BreakConstructorInitializers: BeforeComma
-ColumnLimit: 120
-CommentPragmas: '^(!|NOLINT)'
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-IncludeBlocks: Regroup
-IncludeCategories: 
-  - Regex: '^<.*'
-    Priority: 2
-  - Regex: '.*'
-    Priority: 1
-IncludeIsMainRegex: '(_dt|_win)?$'
-IndentCaseLabels: true
 IndentWidth: 4
-KeepEmptyLinesAtTheStartOfBlocks: false
-PenaltyReturnTypeOnItsOwnLine: 200
-SpacesBeforeTrailingComments: 2
-TabWidth: 4
-UseTab: Never
-...
+---
+Language: Cpp
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+---
