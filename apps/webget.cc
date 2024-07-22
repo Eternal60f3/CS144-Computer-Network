@@ -1,7 +1,7 @@
 #include "address.hh"
 #include "socket.hh"
-#include "util.hh"
 
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 
@@ -19,10 +19,12 @@ void get_URL(const string& host, const string& path) {
     // the "eof" (end of file).
     TCPSocket sock;
     sock.connect(Address(host, "http"));
+
     string message;
     message += "GET " + path + " HTTP/1.1\r\n";
     message += "Host: " + host + "\r\n";
     message += "Connection: close\r\n\r\n";
+
     sock.write(message);
 
     while (!sock.eof()) {
