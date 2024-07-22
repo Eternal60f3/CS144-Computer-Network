@@ -1,7 +1,61 @@
 #ifndef SPONGE_LIBSPONGE_BYTE_STREAM_HH
 #define SPONGE_LIBSPONGE_BYTE_STREAM_HH
 
+#include <cassert>
+#include <cstddef>
 #include <string>
+#include <vector>
+
+template <typename T> class Container {
+  private:
+    size_t arr_size;
+    std::vector<T> arr;
+    size_t capacity;
+    int h, t;
+
+  public:
+    Container(int capacity_)
+        : arr_size(capacity_ + 1), arr(arr_size), capacity(capacity_), h(0),
+          t(0) {}
+
+    size_t curr_size() const { return (t + arr_size - h) % arr_size; }
+
+    size_t remain_size() const { return capacity - curr_size(); }
+
+    bool is_full() const { return (t + 1) % static_cast<int>(arr_size) == h; }
+
+    bool is_empty() const { return h == t; }
+
+    void push(T data) {
+        assert(!is_full());
+
+        arr[t] = data;
+        (++t) %= arr_size;
+    }
+
+    T pop() {
+        assert(!is_empty());
+
+        T ans = arr[h];
+        (++h) %= arr_size;
+
+        return ans;
+    }
+
+    std::vector<T> peek_output(size_t len) const {
+        assert(len <= curr_size());
+        std::vector<T> ans;
+
+        int th = h;
+        size_t cnt = 0;
+        while (cnt < len) {
+            ++cnt;
+            ans.push_back(arr[th]);
+            (++th) %= arr_size;
+        }
+        return ans;
+    }
+};
 
 //! \brief An in-order byte stream.
 
@@ -11,13 +65,14 @@
 class ByteStream {
   private:
     // Your code here -- add private members as necessary.
-
     // Hint: This doesn't need to be a sophisticated data structure at
     // all, but if any of your tests are taking longer than a second,
     // that's a sign that you probably want to keep exploring
     // different approaches.
-
-    bool _error{};  //!< Flag indicating that the stream suffered an error.
+    Container<char> container;
+    bool is_end_input = false;
+    bool _error{}; //!< Flag indicating that the stream suffered an error.
+    int bytes_written_ = 0, bytes_read_ = 0;
 
   public:
     //! Construct a stream with room for `capacity` bytes.
@@ -29,7 +84,7 @@ class ByteStream {
     //! Write a string of bytes into the stream. Write as many
     //! as will fit, and return how many were written.
     //! \returns the number of bytes accepted into the stream
-    size_t write(const std::string &data);
+    size_t write(const std::string& data);
 
     //! \returns the number of additional bytes that the stream has space for
     size_t remaining_capacity() const;
@@ -82,4 +137,4 @@ class ByteStream {
     //!@}
 };
 
-#endif  // SPONGE_LIBSPONGE_BYTE_STREAM_HH
+#endif // SPONGE_LIBSPONGE_BYTE_STREAM_HH
