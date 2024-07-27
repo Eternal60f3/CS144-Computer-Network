@@ -18,9 +18,9 @@ template <typename T> class Container {
         : arr_size(capacity_ + 1), arr(arr_size), capacity(capacity_), h(0),
           t(0) {}
 
-    size_t curr_size() const { return (t + arr_size - h) % arr_size; }
+    size_t curr_stored() const { return (t + arr_size - h) % arr_size; }
 
-    size_t remain_size() const { return capacity - curr_size(); }
+    size_t remain_size() const { return capacity - curr_stored(); }
 
     bool is_full() const { return (t + 1) % static_cast<int>(arr_size) == h; }
 
@@ -43,7 +43,7 @@ template <typename T> class Container {
     }
 
     std::vector<T> peek_output(size_t len) const {
-        assert(len <= curr_size());
+        assert(len <= curr_stored());
         std::vector<T> ans;
 
         int th = h;
