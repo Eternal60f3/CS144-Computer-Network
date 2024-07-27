@@ -29,14 +29,14 @@ size_t ByteStream::write(const string& data) {
 
 //! \param[in] len bytes will be copied from the output side of the buffer
 string ByteStream::peek_output(const size_t len) const {
-    size_t can_peek = min(len, container.curr_size());
+    size_t can_peek = min(len, container.curr_stored());
     vector<char> tmp_ans = container.peek_output(can_peek);
     return string(tmp_ans.begin(), tmp_ans.end());
 }
 
 //! \param[in] len bytes will be removed from the output side of the buffer
 void ByteStream::pop_output(const size_t len) {
-    if (len > container.curr_size()) {
+    if (len > container.curr_stored()) {
         set_error();
         return;
     }
@@ -68,7 +68,7 @@ void ByteStream::end_input() { is_end_input = true; }
 
 bool ByteStream::input_ended() const { return is_end_input; }
 
-size_t ByteStream::buffer_size() const { return container.curr_size(); }
+size_t ByteStream::buffer_size() const { return container.curr_stored(); }
 
 bool ByteStream::buffer_empty() const { return container.is_empty(); }
 
