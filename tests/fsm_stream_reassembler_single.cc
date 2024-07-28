@@ -117,7 +117,7 @@ int main() {
             test.execute(BytesAvailable{"abcdefgh"});
             test.execute(NotAtEof{});
         }
-    } catch (const exception &e) {
+    } catch (const exception& e) {
         cerr << "Exception: " << e.what() << endl;
         return EXIT_FAILURE;
     }
