@@ -3,9 +3,8 @@
 
 #include "byte_stream.hh"
 
-#include <cstddef>
 #include <cstdint>
-#include <deque>
+#include <map>
 #include <string>
 
 //! \brief A class that assembles a series of excerpts from a byte stream
@@ -13,19 +12,13 @@
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
+    std::map<size_t, std::string> _unassemble_strs;
+    size_t _next_assembled_idx;
+    size_t _unassembled_bytes_num;
+    size_t _eof_idx;
 
-    size_t _capacity;
-    ByteStream _output;
-    std::deque<char> buffer;
-    std::deque<bool> bitmap;
-
-    size_t first_unass;
-    size_t unass_size;
-    bool _eof;
-
-    size_t remain_size() {
-        return _capacity - _output.buffer_size() - unass_size;
-    }
+    ByteStream _output; //!< The reassembled in-order byte stream
+    size_t _capacity;   //!< The maximum number of bytes
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity`
