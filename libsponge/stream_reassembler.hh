@@ -4,7 +4,7 @@
 #include "byte_stream.hh"
 
 #include <cstdint>
-#include <set>
+#include <map>
 #include <string>
 
 //! \brief A class that assembles a series of excerpts from a byte stream
@@ -12,29 +12,13 @@
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
-
-    struct Datagram {
-        size_t start, last;
-        std::string data;
-
-        bool operator<(Datagram t) const {
-            if (start != t.start)
-                return start < t.start;
-            else
-                return last < t.last;
-        }
-    };
+    std::map<size_t, std::string> _unassemble_strs;
+    size_t _next_assembled_idx;
+    size_t _unassembled_bytes_num;
+    size_t _eof_idx;
 
     ByteStream _output; //!< The reassembled in-order byte stream
     size_t _capacity;   //!< The maximum number of bytes
-    size_t _eof_idx;
-    size_t buffer_stored;
-    size_t first_unreassembler;
-    std::set<Datagram> buffer;
-
-    size_t remain_size() const {
-        return _capacity - buffer_stored - _output.buffer_size();
-    }
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity`
