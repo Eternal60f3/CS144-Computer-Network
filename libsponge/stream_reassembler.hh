@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <deque>
+#include <optional>
 #include <string>
 
 //! \brief A class that assembles a series of excerpts from a byte stream
@@ -19,12 +20,12 @@ class StreamReassembler {
     std::deque<char> buffer;
     std::deque<bool> bitmap;
 
-    size_t first_unass;
-    size_t unass_size;
+    size_t _first_unass;
+    size_t _unass_size;
     bool _eof;
 
     size_t remain_size() {
-        return _capacity - _output.buffer_size() - unass_size;
+        return _capacity - _output.buffer_size() - _unass_size;
     }
 
   public:
@@ -61,6 +62,17 @@ class StreamReassembler {
     //! \brief Is the internal state empty (other than the output stream)?
     //! \returns `true` if no substrings are waiting to be assembled
     bool empty() const;
+
+    // 当前已经assemble等待read的bytes数量
+    size_t hold_bytes() const;
+
+    // 第一个unass_bytes的序列号(包括syn和fin)
+    size_t first_unass_seq() const;
+
+    // 当前已经assemble的最后一个字节的序列号(包括syn和fin)
+    std::optional<uint64_t> last_ass_seq() const;
+
+    bool is_end_input() const;
 };
 
 #endif // SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH
